@@ -18,7 +18,7 @@ function presence(room){broadcast(room,{type:'presence',fire:room.players.fire?.
 function message(player,msg){const room=rooms.get(player.room);if(!room)return;
   if(msg.type==='state'&&msg.state){const s=msg.state;if(Number.isFinite(s.x)&&Number.isFinite(s.y))broadcast(room,{type:'state',role:player.role,state:{x:Math.max(0,Math.min(1280,s.x)),y:Math.max(0,Math.min(720,s.y)),vx:Number(s.vx)||0,vy:Number(s.vy)||0,skin:Number.isInteger(s.skin)&&s.skin>=0&&s.skin<9?s.skin:0},seq:msg.seq||0})}
   if(msg.type==='level'&&Number.isInteger(msg.level)&&msg.level>=0&&msg.level<100){room.level=msg.level;broadcast(room,{type:'level',level:room.level})}
-  if(msg.type==='event'&&['gem','switch','ready','restart'].includes(msg.event))broadcast(room,{type:'event',role:player.role,event:msg.event,id:String(msg.id||'').slice(0,50)})
+  if(msg.type==='event'&&['gem','switch','switch-reset','ready','restart'].includes(msg.event))broadcast(room,{type:'event',role:player.role,event:msg.event,id:String(msg.id||'').slice(0,50)})
 }
 server.on('upgrade',(req,socket)=>{if(req.headers.upgrade?.toLowerCase()!=='websocket'){socket.destroy();return}
   const u=new URL(req.url,'http://localhost');const code=u.searchParams.get('room')?.toUpperCase();if(!code||!/^[A-Z0-9]{6}$/.test(code)){socket.destroy();return}
@@ -37,3 +37,4 @@ if (!process.env.VERCEL) {
   const port=Number(process.env.PORT)||3000;
   server.listen(port,()=>console.log(`Fire & Water running at http://localhost:${port}`));
 }
+
