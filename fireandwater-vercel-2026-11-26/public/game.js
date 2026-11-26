@@ -38,6 +38,7 @@ function makeLevel(n){const tier=Math.floor(n/12),pattern=n%12,r=rand(n+53);soli
   solids.push(...route);for(let i=1;i<route.length-1;i+=2){const p=route[i];solids.push({x:p.x+p.w*.73,y:p.y+25,w:32,h:625-p.y,wall:true})}const lastPlatform=route.at(-1);doors=[{x:1088,y:lastPlatform.y-78,w:54,h:78,kind:'fire'},{x:1170,y:lastPlatform.y-78,w:54,h:78,kind:'water'}];
   const gemCount=Math.min(route.length,3+Math.floor(pattern/2)+Math.floor(tier/2));
   for(let i=0;i<gemCount;i++){const index=Math.round(i*(route.length-2)/Math.max(1,gemCount-1)),p=route[index];gems.push({id:`${n}-g${i}`,x:p.x+p.w*(i%2?.67:.34),y:p.y-42,kind:i%2?'water':'fire',taken:false})}
+  for(let i=0;i<tier;i++){const p=route[1+(i*2+pattern)%(route.length-2)],branch={x:p.x+25+Math.round(r()*Math.max(0,p.w-130)),y:p.y-78,w:105,h:18,branch:true};solids.push(branch);gems.push({id:`${n}-branch${i}`,x:branch.x+branch.w/2,y:branch.y-39,kind:(i+pattern)%2?'water':'fire',taken:false})}
   const switchCount=Math.min(4,1+Math.floor(pattern/3)+Math.floor(tier/3));const switchIndexes=[Math.floor(route.length*.42),Math.floor(route.length*.72),1,route.length-3];
   for(let i=0;i<switchCount;i++){const p=route[switchIndexes[i]];switches.push({id:`${n}-s${i}`,x:p.x+p.w*.5,y:p.y-15,on:false,kind:n>=2?(i%2?'water':'fire'):null,ordered:n>=4,timed:n>=10,expires:0})}
   gates.push({x:1010,y:30,w:28,h:620});
