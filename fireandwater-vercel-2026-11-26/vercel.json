@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "framework": null,
+  "functions": {
+    "api/socket.js": { "maxDuration": 300 }
+  }
+}
