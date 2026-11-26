@@ -16,7 +16,7 @@ function send(socket,data){if(socket.destroyed)return;const body=Buffer.from(JSO
 function broadcast(room,data){for(const p of Object.values(room.players))if(p)send(p.socket,data)}
 function presence(room){broadcast(room,{type:'presence',fire:room.players.fire?.name||null,water:room.players.water?.name||null})}
 function message(player,msg){const room=rooms.get(player.room);if(!room)return;
-  if(msg.type==='state'&&msg.state){const s=msg.state;if(Number.isFinite(s.x)&&Number.isFinite(s.y))broadcast(room,{type:'state',role:player.role,state:{x:Math.max(0,Math.min(1280,s.x)),y:Math.max(0,Math.min(720,s.y)),vx:Number(s.vx)||0,vy:Number(s.vy)||0},seq:msg.seq||0})}
+  if(msg.type==='state'&&msg.state){const s=msg.state;if(Number.isFinite(s.x)&&Number.isFinite(s.y))broadcast(room,{type:'state',role:player.role,state:{x:Math.max(0,Math.min(1280,s.x)),y:Math.max(0,Math.min(720,s.y)),vx:Number(s.vx)||0,vy:Number(s.vy)||0,skin:Number.isInteger(s.skin)&&s.skin>=0&&s.skin<9?s.skin:0},seq:msg.seq||0})}
   if(msg.type==='level'&&Number.isInteger(msg.level)&&msg.level>=0&&msg.level<100){room.level=msg.level;broadcast(room,{type:'level',level:room.level})}
   if(msg.type==='event'&&['gem','switch','ready','restart'].includes(msg.event))broadcast(room,{type:'event',role:player.role,event:msg.event,id:String(msg.id||'').slice(0,50)})
 }
